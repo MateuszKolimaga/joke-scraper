@@ -6,7 +6,7 @@ import re
 class Scraper :
     def __init__(self, urls_source_path = None):
         self.path = urls_source_path #optional path to file with urls
-        self.urls = [] if self.path is None else self.__load_urls__()
+        self.urls = [] if self.path is None else self._load_url()
         self.pattern = r'[\[(][a-zA-Z]*[\s]*laugh[a-z]*[\])]' #audience reaction
         self.verbose = 1
         self.sentences_num = 2 #desired length of joke
@@ -46,7 +46,7 @@ class Scraper :
         if self.urls is [] :
             self.scrap_urls( )
         pool = multiprocessing.Pool(multiprocessing.cpu_count( ))
-        self.jokes = pool.map(self.__finder__, self.urls)
+        self.jokes = pool.map(self._finder, self.urls)
         self.jokes = list(filter(lambda a : a is not None, self.jokes))
 
     def save_jokes(self,path):
@@ -65,12 +65,12 @@ class Scraper :
         else:
             print("No jokes that can be saved")
 
-    def __load_urls__(self):
+    def _load_urls(self):
         f = open(self.path, 'r')
         urls = f.read( ).splitlines( )
         return urls
 
-    def __finder__(self, url):
+    def _finder(self, url):
         try :
             page = requests.get(url)
             soup = BeautifulSoup(page.content, 'html.parser')
@@ -105,7 +105,7 @@ class Scraper :
         except (ValueError, IndexError, requests.exceptions.MissingSchema, UnicodeEncodeError) as e :
             pass
 
-    def __filter__(self, url):
+    def _filter(self, url):
         try :
             page = requests.get(url)
             soup = BeautifulSoup(page.content, 'html.parser')
