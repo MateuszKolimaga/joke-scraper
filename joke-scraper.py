@@ -6,7 +6,7 @@ import re
 class Scraper :
     def __init__(self, urls_source_path = None):
         self.path = urls_source_path #optional path to file with urls
-        self.urls = [] if self.path is None else self._load_url()
+        self.urls = [] if self.path is None else self._load_urls()
         self.pattern = r'[\[(][a-zA-Z]*[\s]*laugh[a-z]*[\])]' #audience reaction
         self.verbose = 1
         self.sentences_num = 2 #desired length of joke
